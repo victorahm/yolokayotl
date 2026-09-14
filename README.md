@@ -27,6 +27,10 @@ The skills assume the following CLIs are installed and authenticated:
 | [github-cli](skills/github-cli/SKILL.md) | `skills/github-cli/` | `gh` auth, issues, PR create/review/merge, Actions (`gh run`), releases, code review flows |
 | [gitlab-cli](skills/gitlab-cli/SKILL.md) | `skills/gitlab-cli/` | `glab` auth, issues, MR create/review/merge, pipelines (`glab ci`), snippets, `glab api` |
 | [mise](skills/mise/SKILL.md) | `skills/mise/` | Version pinning with `.mise.toml`, `mise run/exec/tasks`, Ruby/Node stack for Rails |
+| [rails-new-project](skills/rails-new-project/SKILL.md) | `skills/rails-new-project/` | Scaffold a new Rails app: detect/pin Ruby+Node+Rails, `rails new` (Postgres, devcontainer, propshaft), Redmine project + git remote, first boot + commit + push |
+| [rails-feature](skills/rails-feature/SKILL.md) | `skills/rails-feature/` | Test-first feature/bugfix: detect RSpec vs Minitest from Gemfile, run via devcontainer/mise, failing test then implement, PR/MR, then update the Redmine ticket status |
+| [rails-planning](skills/rails-planning/SKILL.md) | `skills/rails-planning/` | Split a large feature into small vertical slices, each with acceptance criteria + dependency links, created as real tracked tickets (redmine/gh/glab) |
+| [devcontainers-cli](skills/devcontainers-cli/SKILL.md) | `skills/devcontainers-cli/` | Dev Containers CLI: build/up/exec/features/templates, validate `devcontainer.json` for the Rails + Postgres + mise stack |
 | [redmine-cli](https://github.com/aarondpn/redmine-cli) | `~/.agents/skills/redmine-cli` | Referenced only — use your existing local copy |
 
 ## Install
