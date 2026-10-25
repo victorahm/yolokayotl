@@ -15,8 +15,8 @@ The skills assume the following CLIs are installed and authenticated:
 | [glab](https://gitlab.com/gitlab-org/cli) | GitLab issues, MRs, pipelines, snippets | `brew install glab` or `apt install gitlab-cli` then `glab auth login` |
 | [mise](https://mise.jdx.dev/) | Runtime/tool versions, env, tasks | `curl https://mise.jdx.dev/install.sh \| sh` (see install methods below) |
 
-> The canonical skills are `github-cli`, `gitlab-cli`, and `mise`. The
-> `redmine-cli` skill is **referenced only** — its canonical copy lives at
+> Every directory under `skills/` is canonical in this repo, except
+> `redmine-cli`, which is **referenced only** — its canonical copy lives at
 > `~/.agents/skills/redmine-cli` and is not duplicated in this repo. See
 > [redmine-cli](#redmine-cli) below.
 
@@ -30,8 +30,27 @@ The skills assume the following CLIs are installed and authenticated:
 | [rails-new-project](skills/rails-new-project/SKILL.md) | `skills/rails-new-project/` | Scaffold a new Rails app: detect/pin Ruby+Node+Rails, `rails new` (Postgres, devcontainer, propshaft), Redmine project + git remote, first boot + commit + push |
 | [rails-feature](skills/rails-feature/SKILL.md) | `skills/rails-feature/` | Test-first feature/bugfix: detect RSpec vs Minitest from Gemfile, run via devcontainer/mise, failing test then implement, PR/MR, then update the Redmine ticket status |
 | [rails-planning](skills/rails-planning/SKILL.md) | `skills/rails-planning/` | Split a large feature into small vertical slices, each with acceptance criteria + dependency links, created as real tracked tickets (redmine/gh/glab) |
+| [backlog](skills/backlog/SKILL.md) | `skills/backlog/` | Turn an idea or feature into 10–15 vertical user stories: ask about stack + expensive decisions, no criteria, no estimates, walking skeleton first |
+| [story](skills/story/SKILL.md) | `skills/story/` | Refine one story: 2–3 Given/When/Then criteria, split if it needs more, 5-bullet mini plan, output block ready for the tracker and for `/pair` |
+| [pair](skills/pair/SKILL.md) | `skills/pair/` | Pair on a refined story: approve a test list, then one test → red → minimum code cycles, stop for decisions, check manual criteria, never commit |
 | [devcontainers-cli](skills/devcontainers-cli/SKILL.md) | `skills/devcontainers-cli/` | Dev Containers CLI: build/up/exec/features/templates, validate `devcontainer.json` for the Rails + Postgres + mise stack |
 | [redmine-cli](https://github.com/aarondpn/redmine-cli) | `~/.agents/skills/redmine-cli` | Referenced only — use your existing local copy |
+
+## Writing workflow: `/backlog` → `/story` → `/pair`
+
+`backlog`, `story` and `pair` are one flow split into three steps, each one
+handing its output to the next:
+
+1. **`/backlog`** — slice the idea into vertical user stories (no criteria, no
+   implementation).
+2. **`/story`** — take one story, add 2–3 acceptance criteria + a mini plan, and
+   wait for your approval.
+3. **`/pair`** — build it: approved test list, then small test-first cycles. The
+   AI writes code, you decide; it never commits.
+
+All three set `disable-model-invocation: true`, so they only run when you invoke
+them explicitly as `/backlog`, `/story` and `/pair` — the model will not trigger
+them on its own.
 
 ## Install
 
@@ -65,7 +84,14 @@ To remove symlinks the repo no longer owns:
 README.md
 scripts/install-skills.sh   # symlink sync into ~/.agents/skills/
 skills/
+  backlog/SKILL.md
+  devcontainers-cli/SKILL.md
   github-cli/SKILL.md
   gitlab-cli/SKILL.md
   mise/SKILL.md
+  pair/SKILL.md
+  rails-feature/SKILL.md
+  rails-new-project/SKILL.md
+  rails-planning/SKILL.md
+  story/SKILL.md
 ```
