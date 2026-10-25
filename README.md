@@ -2,14 +2,16 @@
 
 Personal collection of agent skills for Ruby on Rails development. Each skill is a
 directory containing a `SKILL.md` (with opencode-style frontmatter) that teaches a
-CLI agent how to drive a specific tool for Rails workflows.
+CLI agent how to drive a specific tool for Rails workflows. Some skills also ship
+extra files under `references/`, linked relatively from their `SKILL.md`.
 
 ## Requirements
 
-The skills assume the following CLIs are installed and authenticated:
+The skills assume the following CLIs are installed (and authenticated where needed):
 
 | Tool | Purpose | Install |
 |------|---------|---------|
+| [git](https://git-scm.com/) | Status, diffs, scoped local commits (`git-commit` skill) | Preinstalled with your OS, otherwise `brew install git` or `apt install git` |
 | [redmine](https://github.com/aarondpn/redmine-cli) | Redmine issues, time entries, projects, wiki | `curl -fsSL https://raw.githubusercontent.com/aarondpn/redmine-cli/main/install.sh \| bash` then `redmine auth login` |
 | [gh](https://cli.github.com/) | GitHub issues, PRs, Actions, releases | `brew install gh` or `apt install gh` then `gh auth login` |
 | [glab](https://gitlab.com/gitlab-org/cli) | GitLab issues, MRs, pipelines, snippets | `brew install glab` or `apt install gitlab-cli` then `glab auth login` |
@@ -34,6 +36,7 @@ The skills assume the following CLIs are installed and authenticated:
 | [story](skills/story/SKILL.md) | `skills/story/` | Refine one story: 2–3 Given/When/Then criteria, split if it needs more, 5-bullet mini plan, output block ready for the tracker and for `/pair` |
 | [pair](skills/pair/SKILL.md) | `skills/pair/` | Pair on a refined story: approve a test list, then one test → red → minimum code cycles, stop for decisions, check manual criteria, never commit |
 | [devcontainers-cli](skills/devcontainers-cli/SKILL.md) | `skills/devcontainers-cli/` | Dev Containers CLI: build/up/exec/features/templates, validate `devcontainer.json` for the Rails + Postgres + mise stack |
+| [git-commit](skills/git-commit/SKILL.md) | `skills/git-commit/` | Reviewed, scoped local commit: inspect state/diffs, scan for secrets, stage only authorized paths, apply message rules, keep hooks and signing, verify and report; never pushes. Ships `references/` (autonomous contract, message rules, validation scenarios) |
 | [redmine-cli](https://github.com/aarondpn/redmine-cli) | `~/.agents/skills/redmine-cli` | Referenced only — use your existing local copy |
 
 ## Writing workflow: `/backlog` → `/story` → `/pair`
@@ -48,9 +51,14 @@ handing its output to the next:
 3. **`/pair`** — build it: approved test list, then small test-first cycles. The
    AI writes code, you decide; it never commits.
 
-All three set `disable-model-invocation: true`, so they only run when you invoke
-them explicitly as `/backlog`, `/story` and `/pair` — the model will not trigger
-them on its own.
+All three set `disable-model-invocation: true`, so invoke them explicitly as
+`/backlog`, `/story` and `/pair`. That is a Claude Code field: opencode ignores
+unknown frontmatter fields, so it may also select them from the description.
+
+`/story` and `/pair` never commit — `/pair` only proposes the message. To let the
+agent create the commit itself, use
+[git-commit](skills/git-commit/SKILL.md): it runs only on an explicit commit
+request, commits once on a reviewed index, and never pushes.
 
 ## Install
 
@@ -62,9 +70,11 @@ skills with:
 ```
 
 This creates a symlink for each directory under `skills/` into the target skills
-directory (default `~/.agents/skills/`). Existing real directories are **never
-overwritten** — a conflicting target is skipped with a warning. Pass `--force` to
-replace an existing symlink (real directories are still never touched).
+directory (default `~/.agents/skills/`), so new skills are picked up automatically
+on the next run and extra files such as `skills/git-commit/references/` travel with
+their directory. Existing real directories are **never overwritten** — a conflicting
+target is skipped with a warning. Pass `--force` to replace an existing symlink
+(real directories are still never touched).
 
 Customize the target directory:
 
@@ -86,6 +96,10 @@ scripts/install-skills.sh   # symlink sync into ~/.agents/skills/
 skills/
   backlog/SKILL.md
   devcontainers-cli/SKILL.md
+  git-commit/SKILL.md
+  git-commit/references/autonomous.md
+  git-commit/references/commit-messages.md
+  git-commit/references/validation.md
   github-cli/SKILL.md
   gitlab-cli/SKILL.md
   mise/SKILL.md
